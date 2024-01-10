@@ -5,6 +5,7 @@ const bcrypt=require('bcrypt')
 const Post=require('../models/Post')
 const Comment=require('../models/Comment')
 const verifyToken = require('../verifyToken')
+const cors = require('cors')
 
 router.use(cors({origin:'*' ,
  methods: "GET,HEAD,PUT,PATCH,POST,DELETE", 
