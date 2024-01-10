@@ -1,20 +1,20 @@
-import { connect } from 'mongoose'
-import express, { json  } from 'express'
+const mongoose=require('mongoose')
+const express = require('express')
 const app=express()
-import { config } from 'dotenv'
-import cors from 'cors'
-import multer, { diskStorage } from 'multer'
-import { join } from "path"
-import cookieParser from 'cookie-parser'
-import authRoute from './routes/auth'
-import userRoute from './routes/users'
-import postRoute from './routes/posts'
-import commentRoute from './routes/comments'
+const dotenv=require('dotenv')
+const cors=require('cors')
+const multer=require('multer')
+const path=require("path")
+const cookieParser=require('cookie-parser')
+const authRoute=require('./routes/auth')
+const userRoute=require('./routes/users')
+const postRoute=require('./routes/posts')
+const commentRoute=require('./routes/comments')
 
 //database
 const connectDB=async()=>{
     try{
-        await connect(process.env.MONGO_URL)
+        await mongoose.connect(process.env.MONGO_URL)
         console.log("database is connected successfully!")
 
     }
@@ -26,9 +26,9 @@ const connectDB=async()=>{
 
 
 //middlewares
-config()
-app.use(json())
-app.use("/images",(join(__dirname,"/images")))
+dotenv.config()
+app.use(express.json())
+app.use("/images",express.static(path.join(__dirname,"/images")))
 app.use(cors({origin:"http://localhost:5173",credentials:true}))
 app.use(cookieParser())
 app.use("/api/auth",authRoute)
@@ -37,7 +37,7 @@ app.use("/api/posts",postRoute)
 app.use("/api/comments",commentRoute)
 
 //image upload
-const storage=diskStorage({
+const storage=multer.diskStorage({
     destination:(req,file,fn)=>{
         fn(null,"images")
     },
